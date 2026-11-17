@@ -95,3 +95,29 @@ clase 14/
   algunos modelos en Windows.
 - `npm install` reporta vulnerabilidades en dependencias de AR.js (`aframe`, etc.);
   son del paquete de terceros y no afectan el funcionamiento del proyecto.
+
+## Partes importantes del código
+
+- **`src/App.jsx`** controla la pantalla seleccionada (realidad aumentada o visor 3D)
+  y mantiene el modelo elegido. Comparte ese modelo con la escena AR y el visor.
+- **`src/models.js`** contiene el catálogo de modelos y sus rutas. El cubo es la
+  opción inicial.
+- **`src/ar/ARScene.jsx`** solicita acceso a la cámara, inicializa AR.js, configura
+  el marcador Hiro y dibuja el modelo 3D sobre él. También permite reemplazar el
+  modelo desde el selector sin detener la cámara.
+- **`loadNormalizedModel`**, en `src/ar/ARScene.jsx`, centra y escala los modelos
+  para que se vean sobre el marcador.
+- **`src/components/ModelViewer.jsx`** muestra el modelo en una escena 3D que se
+  puede explorar con el mouse.
+- **`vite.config.js`** configura HTTPS local para permitir el acceso del navegador
+  a la cámara.
+
+### Explicación breve para presentar el proyecto
+
+> La interfaz está hecha en React. AR.js utiliza la cámara para reconocer el
+> marcador Hiro; cuando lo detecta, Three.js dibuja sobre él el modelo 3D elegido.
+> Los modelos se cargan desde un catálogo y se pueden cambiar sin apagar la cámara.
+> También hay un visor 3D para explorar los modelos por separado.
+
+La escena superpone el modelo en la imagen de la cámara; no proyecta la imagen en
+una pared mediante un proyector físico.
