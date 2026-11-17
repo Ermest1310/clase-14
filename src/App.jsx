@@ -12,27 +12,23 @@ export default function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <div>
-          <h1>Clase 14 · Realidad Aumentada</h1>
-          <p>
-            Usa la cámara de tu laptop para reconocer el marcador Hiro y ver un
-            modelo 3D sobre él.
-          </p>
-        </div>
+        <h1>Realidad aumentada</h1>
 
-        <label className="model-picker">
-          Modelo 3D
-          <select
-            value={model.url}
-            onChange={(event) => setModelUrl(event.target.value)}
-          >
-            {MODELS.map((item) => (
-              <option key={item.url} value={item.url}>
-                {item.label}
-              </option>
-            ))}
-          </select>
-        </label>
+        {tab === 'viewer' && (
+          <label className="model-picker">
+            Modelo 3D
+            <select
+              value={model.url}
+              onChange={(event) => setModelUrl(event.target.value)}
+            >
+              {MODELS.map((item) => (
+                <option key={item.url} value={item.url}>
+                  {item.label}
+                </option>
+              ))}
+            </select>
+          </label>
+        )}
       </header>
 
       <nav className="tabs" aria-label="Modo de visualización">
@@ -56,7 +52,7 @@ export default function App() {
 
       <main className="app-main">
         {tab === 'ar' ? (
-          <ARScene modelUrl={model.url} />
+          <ARScene modelUrl={model.url} onModelChange={setModelUrl} />
         ) : (
           <ModelViewer modelUrl={model.url} label={model.label} />
         )}

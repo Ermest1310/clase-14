@@ -6,7 +6,7 @@ import {
   ArToolkitContext,
   ArToolkitSource,
 } from '@ar-js-org/ar.js/three.js/build/ar-threex.mjs'
-import { DEFAULT_MODEL } from '../models.js'
+import { DEFAULT_MODEL, MODELS } from '../models.js'
 
 // AR.js necesita saber dónde están camera_para.dat y patt.hiro
 const BASE_URL = `${import.meta.env.BASE_URL}ar/`
@@ -43,7 +43,10 @@ async function loadNormalizedModel(url) {
   return { pivot, mixer }
 }
 
-export default function ARScene({ modelUrl = DEFAULT_MODEL }) {
+export default function ARScene({
+  modelUrl = DEFAULT_MODEL,
+  onModelChange,
+}) {
   const containerRef = useRef(null)
   const arRef = useRef(null)
   const startingRef = useRef(false)
@@ -299,23 +302,22 @@ export default function ARScene({ modelUrl = DEFAULT_MODEL }) {
   return (
     <div className="ar-demo">
       <div className={active ? 'viewer-toolbar is-active' : 'viewer-toolbar'}>
-        {!active && (
-          <p className="hint">
-            Permite el acceso a la cámara y apunta al marcador Hiro. Puedes
-            imprimirlo o mostrarlo en otro dispositivo.
-          </p>
-        )}
+        {!active && <p className="hint">Elige un modelo y apunta al marcador Hiro.</p>}
         <div className="toolbar-actions">
-          {!active && (
-            <a
-              className="secondary"
-              href="https://ar-js-org.github.io/AR.js/data/images/HIRO.jpg"
-              target="_blank"
-              rel="noreferrer"
+          <label className="ar-model-picker">
+            <span>Modelo</span>
+            <select
+              aria-label="Modelo 3D para AR"
+              value={modelUrl}
+              onChange={(event) => onModelChange?.(event.target.value)}
             >
-              Ver marcador Hiro
-            </a>
-          )}
+              {MODELS.map((model) => (
+                <option key={model.url} value={model.url}>
+                  {model.label}
+                </option>
+              ))}
+            </select>
+          </label>
           {active ? (
             <button
               type="button"
@@ -334,7 +336,7 @@ export default function ARScene({ modelUrl = DEFAULT_MODEL }) {
       </div>
 
       {status &&
-        (!running || status.startsWith('Error:') || status.startsWith('No se pudo')) && (
+        (!active || status.startsWith('Error:') || status.startsWith('No se pudo')) && (
           <p className="status">{status}</p>
         )}
 
